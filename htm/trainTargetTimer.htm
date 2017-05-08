@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Train Target</title>
+<link rel="icon" href="../img/homescreenIcon.png">
+<link rel="shortcut icon" href="../img/homescreenIcon.png">
+<link rel="apple-touch-icon" href="../img/homescreenIcon.png">
+<!--
+<link  href="../css/base.css" rel="stylesheet" type="text/css" />
+<script src="../js/base.js" type="text/javascript"></script>
+-->
+<style type="text/css">
+* {
+	margin: 0;
+	padding: 0;
+	font-family: sans-serif, arial, helvetica, verdana, sans-serif;
+	font-size: 25pt;
+	-moz-box-sizing: border-box;
+}
+body {
+	background-color: #EEE;
+}
+.map {
+	background-image: url(../img/mapRotated.png);
+	background-repeat: no-repeat;
+	width: 610px;
+	height:1270px;
+}
+#canvass {
+	position: relative;
+	width: 610px;
+	height:1270px;
+	overflow: hidden;
+}
+#canvass div {
+	position: absolute;
+}
+.timerTarget {
+	background-color: red;
+	min-width: 160px;
+	min-height: 30px;
+	font-size: 12pt;
+	text-align: center;
+	color: white;
+}
+#XXXstation {
+	border-radius: 50%;
+	background-color: rgba(0,128,255,0.5);
+	width: 10px;
+	height: 10px;
+	left: 300px;
+	top: 90px;
+}
+</style>
+<script type="text/javascript">
+/*
+ total 1360
+ dendy 520
+ church 760
+ walstab 80
+ 
+ */
+var points = [ // Has fields added: ix:index in array. duration is updated.
+	{id:	"home", 			pos:[347,719], 			lenPx:0, 	lenM:0, duration:-1} // 1min
+	,{id:	"walstabDendy", 	pos:[(305 - 160),726], 	lenPx:42, 	lenM:80, duration:-1} // 1min
+	,{id:	"dendyChurch", 		pos:[196,473], 			lenPx:280, 	lenM:520, duration:-1} // 6.5min
+	,{id:	"station", 			pos:[305,94], 			lenPx:393, 	lenM:760, duration:-1} //0.5min
+];
+var heart = {
+	init: function() {
+	}
+};
+var ui = {
+	iNext:0
+	,canvass:null
+	,pointsDict:{}
+	,dtStart: null
+	,init: function() {
+		this.canvass = document.querySelector("#canvass");
+		var elFrag = document.createDocumentFragment();
+		// Place the elements on the screen.
+		for (var iP = 0; iP < points.length; iP++) {
+			var oPoint = points[iP];
+			oPoint.ix = iP;
+			this.pointsDict[oPoint.id] = oPoint;
+			elDiv = document.createElement("div");
+			elDiv.className = "timerTarget"
+			elDiv.setAttribute("style", "left:" + oPoint.pos[0] + "px;top:" + oPoint.pos[1] + "px");
+			elDiv.id = oPoint.id;
+			elDiv.innerHTML = oPoint.id;
+			elDiv.setAttribute("onclick", "ui.clickTimerTarget(this.id)");
+			elFrag.appendChild(elDiv);
+		}
+		this.canvass.appendChild(elFrag)
+	}
+	,clickTimerTarget: function(sId) {
+		var o = this.pointsDict[sId];
+		if (!this.iNext) {
+			log("wrong one");
+		}
+		if (o.ix == 0) {
+			log("start timer");
+			heart.init();
+			log("not running");
+		}
+		alert("[" + o.pos[0] + "]");
+	}
+};
+function log(s) {
+	var elOut = document.querySelector("#log");
+	elOut.innerHTML = s;
+}
+function doOnLoad() {
+	ui.init();
+}
+</script>
+</head>
+<body onload="doOnLoad();">
+<div id="canvass" class="outerFrame">
+	<div class="map">&nbsp;</div>
+	<div id="elapsed">00:00</div>
+	<div id="log" style="top:40px;">LOGGGG;</div>
+</div>
+<div id="timetable"></div>
+</body>
+</html>
